@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": "tsx --watch ./index.ts"
+  },
+  "devDependencies": {
+    "tsx": "^3.12.6"
+  }
+}
