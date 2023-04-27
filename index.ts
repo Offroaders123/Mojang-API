@@ -1,4 +1,14 @@
-const user = await getUser("Offroaders123");
+export interface Error {
+  error: string;
+  errorMessage?: string;
+}
+
+export function assertsNonError<T>(value: unknown): asserts value is T {
+  if ("error" in (value as Error)){
+    const { error, errorMessage } = value as Error;
+    throw new Error(errorMessage ?? error);
+  }
+}
 
 export interface User {
   name: string;
@@ -7,12 +17,10 @@ export interface User {
 
 export async function getUser(username: string){
   const response = await fetch(`https://api.mojang.com/users/profiles/minecraft/${username}`);
-  const user = await response.json() as User;
-  console.log(user);
+  const user = await response.json();
+  assertsNonError<User>(user);
   return user;
 }
-
-const profile = await getProfile(user);
 
 export interface Profile {
   id: string;
@@ -30,15 +38,9 @@ export interface Profile {
 export async function getProfile(user: User){
   const { id } = user;
   const response = await fetch(`https://sessionserver.mojang.com/session/minecraft/profile/${id}`);
-  const profile = await response.json() as Profile;
-  console.log(profile);
+  const profile = await response.json();
+  assertsNonError<Profile>(profile);
   return profile;
-}
-
-const textures = getTextures(profile);
-
-if (textures === null){
-  throw new Error("Couldn't locate a texture for this profile.");
 }
 
 export interface Textures {
@@ -62,33 +64,32 @@ export interface Textures {
 export function getTextures(profile: Profile){
   const { properties } = profile;
   const property = properties.find(property => property.name === "textures");
-  if (property === undefined) return null;
+  if (property === undefined){
+    throw new Error("No textures were found.");
+  }
   const { value } = property;
   const textures = JSON.parse(atob(value)) as Textures;
-  console.log(textures);
   return textures;
 }
 
-const skin = await getSkin(textures);
-
 export async function getSkin({ textures }: Textures){
   const { SKIN } = textures;
-  if (SKIN === undefined) return null;
+  if (SKIN === undefined){
+    throw new Error("No skin was found.");
+  }
   const { url } = SKIN;
   const response = await fetch(url);
-  const skin = await response.blob();
-  console.log(skin);
+  const skin = new Uint8Array(await response.arrayBuffer());
   return skin;
 }
 
-const cape = await getCape(textures);
-
 export async function getCape({ textures }: Textures){
   const { CAPE } = textures;
-  if (CAPE === undefined) return null;
+  if (CAPE === undefined){
+    throw new Error("No cape was found.");
+  }
   const { url } = CAPE;
   const response = await fetch(url);
-  const cape = await response.blob();
-  console.log(cape);
+  const cape = new Uint8Array(await response.arrayBuffer());
   return cape;
 }

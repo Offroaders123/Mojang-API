@@ -1,9 +1,10 @@
 {
   "type": "module",
   "scripts": {
-    "dev": "tsx --watch ./index.ts"
+    "dev": "tsx --watch ./demo.ts"
   },
   "devDependencies": {
+    "@types/node": "^18.16.1",
     "tsx": "^3.12.6"
   }
 }
