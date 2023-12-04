@@ -1,5 +1,5 @@
 import { writeFile } from "node:fs/promises";
-import { getUser, getProfile, getTextures, getSkin, getCape } from "./index.js";
+import { getUser, getProfile, getTextures, getSkin, getCape } from "../src/index.js";
 
 const [skin,cape] = await getUser("Offroaders123")
   .then(getProfile)
@@ -17,5 +17,5 @@ const [skin,cape] = await getUser("Offroaders123")
 console.log(skin);
 console.log(cape);
 
-writeFile("./skin.png",skin);
-writeFile("./cape.png",cape);
+writeFile(new URL("./skin.png",import.meta.url),skin);
+writeFile(new URL("./cape.png",import.meta.url),cape);

@@ -1,5 +1,6 @@
-<!-- https://ourcodeworld.com/articles/read/1293/how-to-retrieve-the-skin-of-a-minecraft-user-from-mojang-using-python-3 -->
-<!-- https://wiki.vg/Mojang_API -->
+# Mojang API
+
+*These specs are from [OurCodeWorld](https://ourcodeworld.com/articles/read/1293/how-to-retrieve-the-skin-of-a-minecraft-user-from-mojang-using-python-3) and [wiki.vg](https://wiki.vg/Mojang_API).*
 
 In order to retrieve the current skin of an user, you will need to access the Mojang API. In this case, the first request URL will be:
 

@@ -6,5 +6,5 @@ Thumbs.db
 /node_modules
 /dist
 
-/cape.png
-/skin.png
+/test/cape.png
+/test/skin.png
