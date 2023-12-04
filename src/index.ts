@@ -15,7 +15,7 @@ export interface User {
   id: string;
 }
 
-export async function getUser(username: string){
+export async function getUser(username: string): Promise<User> {
   const response = await fetch(`https://api.mojang.com/users/profiles/minecraft/${username}`);
   const user = await response.json();
   assertsNonError<User>(user);
@@ -35,7 +35,7 @@ export interface Profile {
   ];
 }
 
-export async function getProfile(user: User){
+export async function getProfile(user: User): Promise<Profile> {
   const { id } = user;
   const response = await fetch(`https://sessionserver.mojang.com/session/minecraft/profile/${id}`);
   const profile = await response.json();
@@ -61,7 +61,7 @@ export interface Textures {
   }
 }
 
-export function getTextures(profile: Profile){
+export function getTextures(profile: Profile): Textures {
   const { properties } = profile;
   const property = properties.find(property => property.name === "textures");
   if (property === undefined){
@@ -72,7 +72,7 @@ export function getTextures(profile: Profile){
   return textures;
 }
 
-export async function getSkin({ textures }: Textures){
+export async function getSkin({ textures }: Textures): Promise<Uint8Array> {
   const { SKIN } = textures;
   if (SKIN === undefined){
     throw new Error("No skin was found.");
@@ -83,7 +83,7 @@ export async function getSkin({ textures }: Textures){
   return skin;
 }
 
-export async function getCape({ textures }: Textures){
+export async function getCape({ textures }: Textures): Promise<Uint8Array> {
   const { CAPE } = textures;
   if (CAPE === undefined){
     throw new Error("No cape was found.");
