@@ -3,9 +3,9 @@ export interface Error {
   errorMessage?: string;
 }
 
-export function assertsNonError<T>(value: unknown): asserts value is T {
-  if ("error" in (value as Error)){
-    const { error, errorMessage } = value as Error;
+export function assertsNonError<T extends object>(value: T | Error): asserts value is T {
+  if ("error" in value){
+    const { error, errorMessage } = value;
     throw new Error(errorMessage ?? error);
   }
 }
@@ -17,8 +17,8 @@ export interface User {
 
 export async function getUser(username: string): Promise<User> {
   const response = await fetch(`https://api.mojang.com/users/profiles/minecraft/${username}`);
-  const user = await response.json();
-  assertsNonError<User>(user);
+  const user = await response.json() as User | Error;
+  assertsNonError(user);
   return user;
 }
 
@@ -38,8 +38,8 @@ export interface Profile {
 export async function getProfile(user: User): Promise<Profile> {
   const { id } = user;
   const response = await fetch(`https://sessionserver.mojang.com/session/minecraft/profile/${id}`);
-  const profile = await response.json();
-  assertsNonError<Profile>(profile);
+  const profile = await response.json() as Profile | Error;
+  assertsNonError(profile);
   return profile;
 }
 
